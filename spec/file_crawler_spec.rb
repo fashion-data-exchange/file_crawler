@@ -25,24 +25,24 @@ RSpec.describe FDE::FileCrawler do
   end
 
   context 'crawl' do
-    let(:files) { %w(.rspec_status doc.md text.txt) }
-    let(:markdowns) { ["doc.md"] }
-    let(:texts) { ["text.txt"] }
+    let(:markdowns) { "doc.md" }
+    let(:texts) { "text.txt" }
 
     before do
       subject.config.path_to_directory = path_to_directory
     end
 
     it 'should return an array of files' do
-      expect(FDE::FileCrawler.crawl).to eq(files)
+      expect(FDE::FileCrawler.crawl).to include(markdowns)
+      expect(FDE::FileCrawler.crawl).to include(texts)
     end
 
     it 'should filter the files by a .txt files' do
-      expect(FDE::FileCrawler.crawl(/.*.\.txt/i)).to eq(texts)
+      expect(FDE::FileCrawler.crawl(/.*.\.txt/i)).to include(texts)
     end
 
     it 'should filter the files by a .md files' do
-      expect(FDE::FileCrawler.crawl(/.*.\.md/i)).to eq(markdowns)
+      expect(FDE::FileCrawler.crawl(/.*.\.md/i)).to include(markdowns)
     end
   end
 
