@@ -1,5 +1,6 @@
 require "bundler/setup"
 require "file_crawler"
+require 'pry'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

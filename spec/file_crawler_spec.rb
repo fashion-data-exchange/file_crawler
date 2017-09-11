@@ -46,4 +46,62 @@ RSpec.describe FDE::FileCrawler do
     end
   end
 
+  context 'path_for' do
+    let(:file) { 'text.txt' }
+
+    it 'should return the path for a file' do
+      expect(subject.path_for(file)).to eq("#{path_to_directory}#{file}")
+    end
+  end
+
+  context 'copy' do
+    let(:text_file) { 'text.txt' }
+    let(:path) { "#{path_to_directory}new_folder/" }
+    let(:new_file_name) { 'test2.txt' }
+
+    it 'should copy a file' do
+      subject.copy(text_file, "#{path}#{new_file_name}")
+      expect(File).to exist("#{path}#{new_file_name}")
+    end
+
+    after :each do
+      FileUtils.rm("#{path}#{new_file_name}")
+    end
+  end
+
+  context 'delete' do
+    let(:text_file) { "text.txt" }
+    let(:new_file_name) { "text2.txt" }
+
+    before :each do
+      subject.copy(text_file, subject.path_for(new_file_name))
+    end
+
+    it 'should delete a file' do
+      expect(File).to exist("#{path_to_directory}#{new_file_name}")
+      subject.delete(new_file_name)
+      expect(File).to_not exist("#{path_to_directory}#{new_file_name}")
+    end
+  end
+
+  context 'watch' do
+    def dummy_method(file)
+      "I am the file #{file}"
+    end
+
+    it 'calls the watch block' do
+      expect do |b|
+        subject.watch(&b)
+      end.to yield_with_args
+    end
+
+    it 'calls the dummy_method' do
+      subject.watch do |files|
+        files.each do |file|
+          expect(dummy_method(file)).to eq("I am the file #{file}")
+        end
+      end
+    end
+  end
+
 end
