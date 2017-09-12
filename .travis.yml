@@ -6,6 +6,6 @@ before_install: gem install bundler -v 1.15.4
 
 notifications:
   email: false
-  slack:
+  slack: fadendaten:tWoet2mtObvbwSZSyUAY93jl
     on_success: always
     on_failure: always
