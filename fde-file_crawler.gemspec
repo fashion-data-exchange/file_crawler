@@ -1,7 +1,8 @@
 # coding: utf-8
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "file_crawler/version" 
+require "fde/file_crawler/version"
+
 Gem::Specification.new do |spec|
   spec.name          = "fde-file_crawler"
   spec.version       = FDE::FileCrawler::VERSION
