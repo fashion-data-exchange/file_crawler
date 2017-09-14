@@ -1,5 +1,5 @@
 require "bundler/setup"
-require "file_crawler"
+require "fde/file_crawler"
 require 'pry'
 
 RSpec.configure do |config|
@@ -18,7 +18,7 @@ RSpec.configure do |config|
 end
 
 FDE::FileCrawler.configure do |config|
-  config.path_to_directory = './spec/fixtures/test_folder/'
+  config.path_in_directory = './spec/fixtures/test_folder/in/'
+  config.path_out_directory = './spec/fixtures/test_folder/out/'
 end
-
 

@@ -1,11 +1,14 @@
-require 'file_crawler/version'
+require 'fde/file_crawler/version'
 
 module FDE
 
   module FileCrawler
+    class NoCopyTargetDefined < StandardError; end
+
     class Config
-      attr_accessor :path_to_directory
+      attr_accessor :path_in_directory, :path_out_directory
     end
+
 
     def self.config
       @@config ||= Config.new
@@ -24,14 +27,20 @@ module FDE
     end
 
     def self.crawl(query = /.*\.*/i)
-      path = self.config.path_to_directory
+      path = self.config.path_in_directory
       files = Dir.entries(path)
       files -=  %w[. ..]
       files.select { |file| query.match(file) }
     end
 
-    def self.copy(file, target)
-      FileUtils.copy(path_for(file), target)
+    def self.copy(file, target = nil)
+      if self.config.path_out_directory && target.nil?
+        FileUtils.copy(path_for(file), self.config.path_out_directory)
+      elsif target.nil?
+        raise NoCopyTargetDefined
+      else
+        FileUtils.copy(path_for(file), target)
+      end
     end
 
     def self.delete(file)
@@ -43,7 +52,7 @@ module FDE
     end
 
     def self.path_for(file)
-      "#{self.config.path_to_directory}#{file}"
+      "#{self.config.path_in_directory}#{file}"
     end
   end
 end
