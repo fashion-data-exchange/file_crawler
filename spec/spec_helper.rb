@@ -13,6 +13,7 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 
+  config.profile_examples = 10
   config.order = :random
   Kernel.srand config.seed
 end

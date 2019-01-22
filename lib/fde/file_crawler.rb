@@ -18,6 +18,7 @@ module FDE
       yield self.config
     end
 
+    # TODO: remove conditional
     def self.watch(query = nil, &block)
       unless query.nil?
         yield self.crawl(query)
