@@ -18,12 +18,9 @@ module FDE
       yield self.config
     end
 
-    # TODO: remove conditional
-    def self.watch(query = nil, &block)
-      unless query.nil?
-        yield self.crawl(query)
-      else
-        yield self.crawl
+    def self.watch(query = /.*\.*/i, &block)
+      self.crawl(query).each do |file|
+        yield file
       end
     end
 

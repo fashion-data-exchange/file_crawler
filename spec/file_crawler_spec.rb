@@ -8,7 +8,7 @@ RSpec.describe FDE::FileCrawler do
   let(:path_in_directory) { "./spec/fixtures/test_folder/in/" }
   let(:path_out_directory) { "./spec/fixtures/test_folder/out/" }
 
-  context 'configuration' do
+  describe 'configuration' do
     it 'is of Type FDE::FileCrawler::Config' do
       expect(subject.config).to be_a(FDE::FileCrawler::Config)
     end
@@ -26,10 +26,26 @@ RSpec.describe FDE::FileCrawler do
     it 'should have a configured path_out_directory' do
       expect(subject.config.path_out_directory).to eq(path_out_directory)
     end
-
   end
 
-  context 'crawl' do
+  describe 'watch' do
+    let(:filename_1) { "filename_1" }
+    let(:filename_2) { "filename_2.ext" }
+
+    let(:tester) { double("tester") }
+
+    it 'yields each crawled file to the given block' do
+      expect(subject).to receive(:crawl).and_return([filename_1, filename_2])
+
+      expect(tester).to receive(:test).once.with(filename_1)
+      expect(tester).to receive(:test).once.with(filename_2)
+      subject.watch do |filename|
+        tester.test(filename)
+      end
+    end
+  end
+
+  describe 'crawl' do
     let(:markdowns) { "doc.md" }
     let(:texts) { "text.txt" }
 
@@ -52,7 +68,7 @@ RSpec.describe FDE::FileCrawler do
     end
   end
 
-  context 'path_for' do
+  describe 'path_for' do
     let(:file) { 'text.txt' }
 
     it 'should return the path for a file' do
@@ -60,7 +76,7 @@ RSpec.describe FDE::FileCrawler do
     end
   end
 
-  context 'copy' do
+  describe 'copy' do
     let(:text_file) { 'text.txt' }
     let(:new_file_name) { 'test2.txt' }
     let(:path) { "#{path_in_directory}new_folder/" }
@@ -104,7 +120,7 @@ RSpec.describe FDE::FileCrawler do
     end
   end
 
-  context 'delete' do
+  describe 'delete' do
     let(:text_file) { "text.txt" }
     let(:new_file_name) { "text2.txt" }
 
@@ -118,25 +134,4 @@ RSpec.describe FDE::FileCrawler do
       expect(File).to_not exist("#{path_in_directory}#{new_file_name}")
     end
   end
-
-  context 'watch' do
-    def dummy_method(file)
-      "I am the file #{file}"
-    end
-
-    it 'calls the watch block' do
-      expect do |b|
-        subject.watch(&b)
-      end.to yield_with_args
-    end
-
-    it 'calls the dummy_method' do
-      subject.watch do |files|
-        files.each do |file|
-          expect(dummy_method(file)).to eq("I am the file #{file}")
-        end
-      end
-    end
-  end
-
 end

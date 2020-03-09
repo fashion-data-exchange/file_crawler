@@ -16,6 +16,9 @@ RSpec.configure do |config|
   config.profile_examples = 10
   config.order = :random
   Kernel.srand config.seed
+
+  config.filter_run :focus
+  config.run_all_when_everything_filtered = true
 end
 
 FDE::FileCrawler.configure do |config|
